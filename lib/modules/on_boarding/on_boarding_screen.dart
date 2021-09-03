@@ -76,7 +76,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     expansionFactor: 4,
                     dotWidth: 10,
                     spacing: 5,
-                    activeDotColor: Colors.deepOrange,
+                    activeDotColor: Colors.blue,
                   ),
                 ),
                 Spacer(),

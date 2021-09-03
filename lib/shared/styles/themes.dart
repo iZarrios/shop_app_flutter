@@ -3,11 +3,11 @@ import 'package:flutter/services.dart';
 
 ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
-  fontFamily: "Poppins",
+  // fontFamily: "Poppins",
 );
 
 ThemeData lightTheme = ThemeData(
-  fontFamily: "Poppins",
+  // fontFamily: "Poppins",
   scaffoldBackgroundColor: Colors.white,
   appBarTheme: AppBarTheme(
     iconTheme: IconThemeData(color: Colors.black),
@@ -24,11 +24,11 @@ ThemeData lightTheme = ThemeData(
       fontWeight: FontWeight.bold,
     ),
   ),
-  primarySwatch: Colors.deepOrange,
-  floatingActionButtonTheme:
-      FloatingActionButtonThemeData(backgroundColor: Colors.deepOrange),
+  primarySwatch: Colors.blue,
+  // floatingActionButtonTheme:
+  //     FloatingActionButtonThemeData(backgroundColor: Colors.blue),
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
-    selectedItemColor: Colors.deepOrange,
+    selectedItemColor: Colors.blue,
     elevation: 20,
     type: BottomNavigationBarType.fixed,
   ),

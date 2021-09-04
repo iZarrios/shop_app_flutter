@@ -18,7 +18,7 @@ class OnBoardingScreen extends StatefulWidget {
 
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
   var boardController = PageController();
-  bool isLast = false;
+  bool _isLast = false;
 
   final List<BoardingModel> boarding = [
     BoardingModel(
@@ -39,7 +39,15 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        actions: [
+          MaterialButton(
+            onPressed: () => navigateAndFinish(
+              context,
+              ShopLoginScreen(),
+            ),
+            child: Text("SKIP",style: TextStyle(color: Theme.of(context).primaryColor),),
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(30.0),
@@ -52,11 +60,11 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 onPageChanged: (index) {
                   if (index == boarding.length - 1) {
                     setState(() {
-                      isLast = true;
+                      _isLast = true;
                     });
                     print("Last Page");
                   } else {
-                    isLast = false;
+                    _isLast = false;
                   }
                 },
                 itemBuilder: (context, index) =>
@@ -82,15 +90,13 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 Spacer(),
                 FloatingActionButton(
                   onPressed: () {
-                    if(!isLast) {
+                    if (!_isLast) {
                       boardController.nextPage(
                           duration: Duration(milliseconds: 750),
                           curve: Curves.fastLinearToSlowEaseIn);
+                    } else {
+                      navigateAndFinish(context, ShopLoginScreen());
                     }
-                    else
-                      {
-                        navigateAndFinish(context,ShopLoginScreen());
-                      }
                   },
                   child: Icon(Icons.arrow_forward),
                 )

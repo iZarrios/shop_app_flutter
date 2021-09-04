@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-class RegisterScreen extends StatelessWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+class ShopRegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {

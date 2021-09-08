@@ -16,14 +16,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ShopCubit, ShopState>(
-      listener: (context, state) {
-        // Error because states change fast
-        // if (state is SuccessUserData) {
-        //   _nameController.text = state.userData.data!.name;
-        //   _emailController.text = state.userData.data!.email;
-        //   _phoneController.text = state.userData.data!.phone;
-        // }
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         var _model = ShopCubit.get(context).userModel;
         _nameController.text = _model!.data!.name;

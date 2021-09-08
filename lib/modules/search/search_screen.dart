@@ -4,11 +4,10 @@ import 'cubit/search_cubit.dart';
 import '../../shared/components/components.dart';
 
 class SearchScreen extends StatelessWidget {
-  SearchScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var _foemKey = GlobalKey<FormState>();
+    var _formKey = GlobalKey<FormState>();
     var _searchController = TextEditingController();
 
     return BlocProvider(
@@ -19,7 +18,7 @@ class SearchScreen extends StatelessWidget {
           return Scaffold(
               appBar: AppBar(),
               body: Form(
-                key: _foemKey,
+                key: _formKey,
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(

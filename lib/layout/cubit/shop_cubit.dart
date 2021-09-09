@@ -154,10 +154,10 @@ class ShopCubit extends Cubit<ShopState> {
     // final DatabaseReference db = FirebaseDatabase.instance.reference();
     // User? user = FirebaseAuth.instance.currentUser;
     // db.child(user!.uid).once().then((value) => print(value.value));
-    late UserData userModel;
 
     final DatabaseReference db = FirebaseDatabase.instance.reference();
     User? user = FirebaseAuth.instance.currentUser;
+    // print(user!.uid);
     db.child(user!.uid).once().then(
       (value) {
         emit(SuccessUserData(userModel));
@@ -180,9 +180,12 @@ class ShopCubit extends Cubit<ShopState> {
     required String name,
     required String email,
     required String phone,
-  }) {
+  }) async{
     emit(LoadingUpdateUserData());
+    // final DatabaseReference db = FirebaseDatabase.instance.reference();
+    // User? user = FirebaseAuth.instance.currentUser;
 
+    // await db.child(user.uid).set({})
     DioHelper.putData(
       path: ApiDataAndEndPoints.updateProfilePathUrl,
       token: token,

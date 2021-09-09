@@ -30,7 +30,7 @@ class ErrorCategoriesData extends ShopState {
 class LoadingUserData extends ShopState {}
 
 class SuccessUserData extends ShopState {
-  final UserData userData;
+  final UserData? userData;
 
   SuccessUserData(this.userData);
 }

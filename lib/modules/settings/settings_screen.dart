@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_conditional_rendering/conditional.dart';
+import 'package:shop_app/models/login_model.dart';
 import '../../layout/cubit/shop_cubit.dart';
 import '../../shared/components/components.dart';
 import '../../shared/components/constants.dart';
@@ -13,14 +14,16 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var _user = ShopCubit.get(context).userModel;
+
     return BlocConsumer<ShopCubit, ShopState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        print(_user);
+      },
       builder: (context, state) {
-        // var _model = ShopCubit.get(context).userModel;
-        var _user = ShopCubit.get(context).userModel;
-        // _nameController.text = _user!.name;
-        // _emailController.text = _user.email;
-        // _phoneController.text = _user.phone;
+        _nameController.text = _user!.name;
+        _emailController.text = _user.email;
+        _phoneController.text = _user.phone;
 
         return Conditional.single(
           context: context,
@@ -79,17 +82,18 @@ class SettingsScreen extends StatelessWidget {
               const SizedBox(height: 20.0),
               defaultButton(
                 onPressedFunction: () {
-                  // check no empty value
-                  if (_formKey.currentState!.validate()) {
-                    // to close keyboard if open
-                    FocusScope.of(context).unfocus();
-
-                    ShopCubit.get(context).updateUserData(
-                      name: _nameController.text,
-                      email: _emailController.text,
-                      phone: _phoneController.text,
-                    );
-                  }
+                  showToast(text: "NOT IMPLEMENTED YET!", state: ToastStates.WARNING);
+                  // // check no empty value
+                  // if (_formKey.currentState!.validate()) {
+                  //   // to close keyboard if open
+                  //   FocusScope.of(context).unfocus();
+                  //
+                  //   ShopCubit.get(context).updateUserData(
+                  //     name: _nameController.text,
+                  //     email: _emailController.text,
+                  //     phone: _phoneController.text,
+                  //   );
+                  // }
                 },
                 text: 'update',
               ),

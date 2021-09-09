@@ -15,25 +15,12 @@ class HomeLayoutScreen extends StatelessWidget {
       builder: (context, state) {
         ShopCubit shopCubit = ShopCubit.get(context);
         return Scaffold(
-          floatingActionButton: FloatingActionButton(onPressed: () {
-            // User? user = FirebaseAuth.instance.currentUser;
-            // print(user!.uid);
-            late UserData userModel;
-            late Map u;
-            final DatabaseReference db = FirebaseDatabase.instance.reference();
-            User? user = FirebaseAuth.instance.currentUser;
-            db.child(user!.uid).once().then(
-              (value) {
-                u = value.value;
-                userModel = UserData(
-                    id: u["id"],
-                    name: u["name"],
-                    email: u["email"],
-                    phone: u["phone"],
-                    password: u["password"]);
-              },
-            );
+          floatingActionButton: FloatingActionButton(onPressed: () async {
+            // ShopCubit.get(context).getUserData();
+            var _user = ShopCubit.get(context).userModel;
+            print(_user!.toMap());
 
+            // print(_user);
             // signOut(context);
           }),
           appBar: AppBar(

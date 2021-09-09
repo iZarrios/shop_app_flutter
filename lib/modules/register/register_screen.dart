@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_conditional_rendering/flutter_conditional_rendering.dart';
 import 'cubit/register_cubit.dart';
-import '../../shared/network/local/cache_data.dart';
 import '../../app_router.dart';
 import '../../shared/components/components.dart';
-import '../../shared/network/local/cache_helper.dart';
 import '../../shared/styles/my_main_styles.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -25,14 +23,7 @@ class RegisterScreen extends StatelessWidget {
       child: BlocConsumer<RegisterCubit, RegisterState>(
         listener: (context, state) {
           if (state is RegisterSucess) {
-            if (state.registerModel.status) {
-              _goToHomeScreen(state, context);
-            } else {
-              showToast(
-                state: ToastStates.ERROR,
-                text: state.registerModel.message,
-              );
-            }
+            _goToHomeScreen(state, context);
           }
         },
         builder: (context, state) {
@@ -103,10 +94,10 @@ class RegisterScreen extends StatelessWidget {
                   type: TextInputType.emailAddress,
                   validate: (String? value) {
                     if (value!.isEmpty) {
-                      return 'Please Enter Your Email Adress';
+                      return 'Please Enter Your Email Address';
                     }
                   },
-                  label: 'Email Adress',
+                  label: 'Email Address',
                   prefix: Icons.email_outlined,
                 ),
                 const SizedBox(height: 15),
@@ -128,7 +119,7 @@ class RegisterScreen extends StatelessWidget {
                   isPassword: registerCubit.isPassword,
                   suffix: registerCubit.suffix,
                   suffixPressed: () {
-                    registerCubit.changePasswordVisibality();
+                    registerCubit.changePasswordVisibility();
                   },
                   validate: (String? value) {
                     if (value!.isEmpty) {
@@ -193,23 +184,19 @@ class RegisterScreen extends StatelessWidget {
       FocusScope.of(context).unfocus();
       registerCubit.userRegister(
         name: nameController.text,
-        email: emailController.text,
         phone: phoneController.text,
+        email: emailController.text,
         password: passwordController.text,
       );
     }
   }
 
   void _goToHomeScreen(RegisterSucess state, BuildContext context) {
-    CacheHelper.saveCacheData(
-            key: 'token', value: state.registerModel.data!.token)
-        .then((_) {
-      token = state.registerModel.data!.token;
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        AppRouter.homeLayoutScreen,
-        (route) => false,
-      );
-    });
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppRouter.homeLayoutScreen,
+      (route) => false,
+    );
+    // });
   }
 }

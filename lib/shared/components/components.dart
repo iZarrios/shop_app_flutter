@@ -13,6 +13,7 @@ TextFormField defaultFormField({
   required Function validate,
   required String label,
   required IconData prefix,
+  String? hintText,
   IconData? suffix,
   Function? suffixPressed,
   bool isClickable = true,
@@ -22,11 +23,13 @@ TextFormField defaultFormField({
     keyboardType: type,
     obscureText: isPassword,
     enabled: isClickable,
+
     onFieldSubmitted: onSubmit as void Function(String)?,
     onChanged: onChange as void Function(String)?,
     onTap: onTap as void Function()?,
     validator: validate as String? Function(String?)?,
     decoration: InputDecoration(
+      hintText: hintText,
       labelText: label,
       prefixIcon: Icon(
         prefix,

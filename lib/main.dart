@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'app_router.dart';
@@ -14,11 +16,12 @@ import 'shared/styles/my_light_theme.dart';
 void main() async {
   // to ensure running all async await functions before runApp
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
   ErrorWidget.builder = (FlutterErrorDetails details) {
     return Scaffold(
       body: Center(
-        child: Text('Loading Data .. Come Later!'),
+        child: Text('Loading Data.. Come Later!'),
       ),
     );
   };
@@ -31,8 +34,6 @@ void main() async {
 
   isDarkFromShared = CacheHelper.getCacheData(key: 'isDark');
   onBoarding = CacheHelper.getCacheData(key: 'onBoarding');
-  token = CacheHelper.getCacheData(key: 'token');
-
   runApp(
     ShopApp(
       isDarkFromShared: isDarkFromShared,
@@ -93,7 +94,7 @@ class ShopApp extends StatelessWidget {
       darkTheme: myDarkTheme(context),
       onGenerateRoute: appRouter.generateRoute,
       onUnknownRoute: appRouter.generateRoute,
-      // initialRoute: AppRouter.homeLayoutScreen,
+      initialRoute: AppRouter.homeLayoutScreen,
     );
   }
 

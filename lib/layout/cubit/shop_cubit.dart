@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
@@ -20,10 +22,10 @@ part 'shop_state.dart';
 class ShopCubit extends Cubit<ShopState> {
   ShopCubit() : super(ShopInitial());
 
-  // object from ShopCubit
+  static late DatabaseReference db = FirebaseDatabase.instance.reference();
+
   static ShopCubit get(context) => BlocProvider.of(context);
 
-  // start bottom nav bar items
   int currentIndex = 0;
 
   List<Widget> screens = [
@@ -35,7 +37,7 @@ class ShopCubit extends Cubit<ShopState> {
 
   List<BottomNavigationBarItem> bottomNavigationBarItems = [
     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-    BottomNavigationBarItem(icon: Icon(Icons.apps), label: 'Cateogries'),
+    BottomNavigationBarItem(icon: Icon(Icons.apps), label: 'Categories'),
     BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favorite'),
     BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
   ];
@@ -48,9 +50,8 @@ class ShopCubit extends Cubit<ShopState> {
   // start get home data
   HomeModel? homeModel;
 
-  void getHomeData() {
+  void getHomeData() async {
     emit(LoadingHomeData());
-
     DioHelper.getData(
       path: ApiDataAndEndPoints.homePathUrl,
       token: token,
@@ -144,18 +145,31 @@ class ShopCubit extends Cubit<ShopState> {
   }
 
   // start get user data
-  LoginModel? userModel;
+  UserData? userModel;
 
+  // User
+//TODO:: get data from here
   void getUserData() {
     emit(LoadingUserData());
+    // final DatabaseReference db = FirebaseDatabase.instance.reference();
+    // User? user = FirebaseAuth.instance.currentUser;
+    // db.child(user!.uid).once().then((value) => print(value.value));
+    late UserData userModel;
 
-    DioHelper.getData(
-      path: ApiDataAndEndPoints.profilePathUrl,
-      token: token,
-    ).then((value) {
-      userModel = LoginModel.fromJson(value.data);
-      emit(SuccessUserData(userModel!));
-    }).catchError((error) {
+    final DatabaseReference db = FirebaseDatabase.instance.reference();
+    User? user = FirebaseAuth.instance.currentUser;
+    db.child(user!.uid).once().then(
+      (value) {
+        emit(SuccessUserData(userModel));
+        Map u = value.value;
+        userModel = UserData(
+            id: u["id"],
+            name: u["name"],
+            email: u["email"],
+            phone: u["phone"],
+            password: u["password"]);
+      },
+    ).catchError((error) {
       print('getUserData -- ${error.toString()}');
       emit(ErrorUserData(error.toString()));
     });
@@ -178,7 +192,7 @@ class ShopCubit extends Cubit<ShopState> {
         'phone': phone,
       },
     ).then((value) {
-      userModel = LoginModel.fromJson(value.data);
+      // userModel = LoginModel.fromJson(value.data);
       emit(SuccessUpdateUserData(userModel!));
     }).catchError((error) {
       print('updateUserData -- ${error.toString()}');

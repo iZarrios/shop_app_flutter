@@ -6,22 +6,21 @@ import '../../shared/components/components.dart';
 import '../../shared/components/constants.dart';
 
 class SettingsScreen extends StatelessWidget {
-  SettingsScreen({Key? key}) : super(key: key);
-
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
+  late final TextEditingController _nameController = TextEditingController();
+  late final TextEditingController _emailController = TextEditingController();
+  late final TextEditingController _phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ShopCubit, ShopState>(
       listener: (context, state) {},
       builder: (context, state) {
-        var _model = ShopCubit.get(context).userModel;
-        _nameController.text = _model!.data!.name;
-        _emailController.text = _model.data!.email;
-        _phoneController.text = _model.data!.phone;
+        // var _model = ShopCubit.get(context).userModel;
+        var _user = ShopCubit.get(context).userModel;
+        // _nameController.text = _user!.name;
+        // _emailController.text = _user.email;
+        // _phoneController.text = _user.phone;
 
         return Conditional.single(
           context: context,
@@ -35,6 +34,7 @@ class SettingsScreen extends StatelessWidget {
 
   bool _conditionBuilder(BuildContext context, state) {
     return ShopCubit.get(context).userModel != null;
+    // return true;
   }
 
   Widget _widgetBuilder(context, state) {
@@ -53,7 +53,7 @@ class SettingsScreen extends StatelessWidget {
                 validate: (String? val) {
                   if (val!.isEmpty) return 'name must not be empty';
                 },
-                label: 'Name',
+                label: "Name",
                 prefix: Icons.person,
               ),
               const SizedBox(height: 20.0),
@@ -79,9 +79,9 @@ class SettingsScreen extends StatelessWidget {
               const SizedBox(height: 20.0),
               defaultButton(
                 onPressedFunction: () {
-                  // chect no empty value
+                  // check no empty value
                   if (_formKey.currentState!.validate()) {
-                    // to close keypord if open
+                    // to close keyboard if open
                     FocusScope.of(context).unfocus();
 
                     ShopCubit.get(context).updateUserData(

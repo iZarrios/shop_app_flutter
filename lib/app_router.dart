@@ -1,7 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'layout/cubit/shop_cubit.dart';
-
 import 'layout/home_layout_screen.dart';
 import 'modules/login/login_screen.dart';
 import 'modules/on_boarding/on_boarding_screen.dart';
@@ -36,11 +36,19 @@ class AppRouter {
     }
   }
 
+  User? user = FirebaseAuth.instance.currentUser;
+
+  // FirebaseAuth auth = FirebaseAuth.instanceFor(app: )
+  // auth.signOut();
+  // auth.signOut();
+
   MaterialPageRoute<dynamic> _startScreen() {
     if (onBoarding != null) {
       // onBoarding = true
-      if (token != null) {
-        return _goToHomeLayoutScreen();
+      if (user != null) {
+        return _goToLoginScreen();
+
+        // return _goToHomeLayoutScreen();
       } else {
         return _goToLoginScreen();
       }

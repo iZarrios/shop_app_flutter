@@ -41,7 +41,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     ),
   ];
 
-  final PageController _pageBordingController = PageController();
+  final PageController _pageBoardingController = PageController();
 
   bool _isLastPage = false;
 
@@ -80,7 +80,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   Expanded _buildPageView() {
     return Expanded(
       child: PageView.builder(
-        controller: _pageBordingController,
+        controller: _pageBoardingController,
         physics: BouncingScrollPhysics(),
         itemBuilder: _itemBuilder,
         itemCount: _boarding.length,
@@ -132,7 +132,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     return Row(
       children: [
         SmoothPageIndicator(
-          controller: _pageBordingController,
+          controller: _pageBoardingController,
           count: _boarding.length,
           effect: ExpandingDotsEffect(
             dotColor: MyMainColors.myGrey,
@@ -149,7 +149,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             if (_isLastPage) {
               _goToLoginScreen();
             } else {
-              _pageBordingController.nextPage(
+              _pageBoardingController.nextPage(
                 duration: Duration(milliseconds: 750),
                 curve: Curves.fastLinearToSlowEaseIn,
               );

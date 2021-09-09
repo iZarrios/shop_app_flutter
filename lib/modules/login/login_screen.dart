@@ -23,14 +23,7 @@ class LoginScreen extends StatelessWidget {
       child: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state is LoginSuccess) {
-            if (state.loginModel.status) {
               _goToHomeScreen(state, context);
-            } else {
-              showToast(
-                state: ToastStates.ERROR,
-                text: state.loginModel.message,
-              );
-            }
           }
         },
         builder: (context, state) {
@@ -102,7 +95,7 @@ class LoginScreen extends StatelessWidget {
                   isPassword: _loginCubit.isPassword,
                   suffix: _loginCubit.suffix,
                   suffixPressed: () {
-                    _loginCubit.changePasswordVisibality();
+                    _loginCubit.changePasswordVisibility();
                   },
                   validate: (String? value) {
                     if (value!.isEmpty) {
@@ -187,9 +180,9 @@ class LoginScreen extends StatelessWidget {
   }
 
   void _goToHomeScreen(LoginSuccess state, BuildContext context) {
-    CacheHelper.saveCacheData(key: 'token', value: state.loginModel.data!.token)
+    CacheHelper.saveCacheData(key: '', value:12312312312)// state.loginModel.data!.
         .then((_) {
-      token = state.loginModel.data!.token;
+      //  = state.loginModel.data!.;
       Navigator.pushReplacementNamed(context, AppRouter.homeLayoutScreen);
     });
   }

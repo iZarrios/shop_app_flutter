@@ -1,10 +1,11 @@
 import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import '../../../models/login_model.dart';
-import '../../../shared/network/remote/dio_helper.dart';
 
 part 'register_state.dart';
 
@@ -14,38 +15,49 @@ class RegisterCubit extends Cubit<RegisterState> {
   // make object of the cubit
   static RegisterCubit get(context) => BlocProvider.of(context);
   late LoginModel _registerModel;
+  late UserData _user;
 
   void userRegister({
+    required String phone,
     required String name,
     required String email,
-    required String phone,
     required String password,
-  }) {
+  }) async {
     emit(RegisterLoading());
-
-    DioHelper.postData(
-      path: ApiDataAndEndPoints.registerPathUrl,
-      data: {
-        'name': name,
-        'email': email,
-        'phone': phone,
-        'password': password,
-      },
-    ).then((value) {
-      _registerModel = LoginModel.fromJson(value.data);
-      print('STATUS ${_registerModel.status}');
-      emit(RegisterSucess(_registerModel));
-    }).catchError((errorMessage) {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: "$email", password: "$password");
+      print("Success Registration");
+      final DatabaseReference db = FirebaseDatabase.instance.reference();
+      _user = UserData(
+          id: userCredential.user!.uid, name: name, email: email, phone: phone,password: password);
+      print(_user);
+      await db
+          .child("${userCredential.user!.uid}")
+          .set(_user.toMap())
+          .then((value) => print("Done cloud register"))
+          .catchError((e) async {
+            print("Error cloud register $e");
+          });
+      emit(RegisterSucess());
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+    } catch (errorMessage) {
       print(errorMessage.toString());
       emit(RegisterError(errorMessage.toString()));
-    });
+    }
   }
 
 // password text field
   IconData suffix = Icons.visibility_outlined;
   bool isPassword = true;
 
-  void changePasswordVisibality() {
+  void changePasswordVisibility() {
     isPassword = !isPassword;
     suffix =
         isPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined;

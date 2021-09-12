@@ -1,3 +1,4 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -15,14 +16,16 @@ class HomeLayoutScreen extends StatelessWidget {
       builder: (context, state) {
         ShopCubit shopCubit = ShopCubit.get(context);
         return Scaffold(
-          floatingActionButton: FloatingActionButton(onPressed: () async {
-            // ShopCubit.get(context).getUserData();
-            var _user = ShopCubit.get(context).userModel;
-            print(_user!.toMap());
-
-            // print(_user);
-            // signOut(context);
-          }),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.shopping_cart),
+            onPressed: (){
+              print("press me shop");
+              // var goto = MaterialPageRoute(
+              //   builder: (context) => ItemDetailsScreen(model: model),
+              // );
+              // Navigator.push(context, goto);
+            },
+          ),
           appBar: AppBar(
             title: Text('SHOP'),
             centerTitle: true,

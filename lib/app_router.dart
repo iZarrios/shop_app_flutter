@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_app/modules/item_details/item_details_screen.dart';
 import 'layout/cubit/shop_cubit.dart';
 import 'layout/home_layout_screen.dart';
+import 'models/home_model.dart';
 import 'modules/login/login_screen.dart';
 import 'modules/on_boarding/on_boarding_screen.dart';
 import 'modules/register/register_screen.dart';
@@ -36,17 +38,13 @@ class AppRouter {
     }
   }
 
-  User? user = FirebaseAuth.instance.currentUser;
-
-  // FirebaseAuth auth = FirebaseAuth.instanceFor(app: )
-  // auth.signOut();
-  // auth.signOut();
+  User? user = FirebaseAuth.instance.currentUser;//>> place
 
   MaterialPageRoute<dynamic> _startScreen() {
     if (onBoarding != null) {
       // onBoarding = true
       if (user != null) {
-        return _goToLoginScreen();
+        return _goToHomeLayoutScreen();
 
         // return _goToHomeLayoutScreen();
       } else {
@@ -59,30 +57,30 @@ class AppRouter {
 
   MaterialPageRoute<dynamic> _goToOnBoardingScreen() {
     return MaterialPageRoute(
-      builder: (_) => OnBoardingScreen(),
+      builder: (context) => OnBoardingScreen(),
     );
   }
 
   MaterialPageRoute<dynamic> _goToLoginScreen() {
     return MaterialPageRoute(
-      builder: (_) => LoginScreen(),
+      builder: (context) => LoginScreen(),
     );
   }
 
   MaterialPageRoute<dynamic> _goToRegisterScreen() {
     return MaterialPageRoute(
-      builder: (_) => RegisterScreen(),
+      builder: (context) => RegisterScreen(),
     );
   }
 
   MaterialPageRoute<dynamic> _goToHomeLayoutScreen() {
     return MaterialPageRoute(
-      builder: (_) => BlocProvider(
-        create: (_) => ShopCubit()
+      builder: (context) => BlocProvider(
+        create: (context) => ShopCubit()
           ..getHomeData()
           ..getCategoriesData()
           ..getFavoritesData()
-          ..getUserData(),
+          ..getUserData(context),
         child: HomeLayoutScreen(),
       ),
     );
@@ -90,7 +88,7 @@ class AppRouter {
 
   MaterialPageRoute<dynamic> _goToSearchScreen() {
     return MaterialPageRoute(
-      builder: (_) => SearchScreen(),
+      builder: (context) => SearchScreen(),
     );
   }
 }

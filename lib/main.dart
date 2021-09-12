@@ -76,11 +76,11 @@ class ShopApp extends StatelessWidget {
   BlocProvider<ShopCubit> _shopCubit() {
     return BlocProvider(
       // get data where you provide the cubit
-      create: (_) => ShopCubit()
-        ..getHomeData()
-        ..getCategoriesData()
-        ..getFavoritesData()
-        ..getUserData(),
+      create: (_) => ShopCubit(),
+      // ..getHomeData()
+      // ..getCategoriesData()
+      // ..getFavoritesData()
+      // ..getUserData(),
     );
   }
 

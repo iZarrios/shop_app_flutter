@@ -31,15 +31,22 @@ class RegisterCubit extends Cubit<RegisterState> {
       print("Success Registration");
       final DatabaseReference db = FirebaseDatabase.instance.reference();
       _user = UserData(
-          id: userCredential.user!.uid, name: name, email: email, phone: phone,password: password);
+        id: userCredential.user!.uid,
+        name: name,
+        email: email,
+        phone: phone,
+        password: password,
+        points: 0,
+        credit: 0,
+      );
       print(_user);
       await db
           .child("${userCredential.user!.uid}")
           .set(_user.toMap())
           .then((value) => print("Done cloud register"))
           .catchError((e) async {
-            print("Error cloud register $e");
-          });
+        print("Error cloud register $e");
+      });
       emit(RegisterSucess());
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {

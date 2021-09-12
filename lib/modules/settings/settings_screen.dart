@@ -83,7 +83,9 @@ class SettingsScreen extends StatelessWidget {
               defaultButton(
                 onPressedFunction: () {
                   showToast(text: "NOT IMPLEMENTED YET!", state: ToastStates.WARNING);
-                  // // check no empty value
+                    FocusScope.of(context).unfocus();
+
+                  // // // check no empty value
                   // if (_formKey.currentState!.validate()) {
                   //   // to close keyboard if open
                   //   FocusScope.of(context).unfocus();

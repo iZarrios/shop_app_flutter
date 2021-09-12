@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:shop_app/shared/components/constants.dart';
 import '../../models/categories_model.dart';
 import '../../models/change_favorites_model.dart';
 import '../../models/favorites_model.dart';
@@ -149,25 +150,26 @@ class ShopCubit extends Cubit<ShopState> {
 
   // User
 //TODO:: get data from here
-  void getUserData() {
+  void getUserData(BuildContext context) {
     emit(LoadingUserData());
-    // final DatabaseReference db = FirebaseDatabase.instance.reference();
-    // User? user = FirebaseAuth.instance.currentUser;
-    // db.child(user!.uid).once().then((value) => print(value.value));
 
     final DatabaseReference db = FirebaseDatabase.instance.reference();
     User? user = FirebaseAuth.instance.currentUser;
-    // print(user!.uid);
-    db.child(user!.uid).once().then(
+    if (user == null) signOut(context);
+    print(user!.uid);
+    db.child(user.uid).once().then(
       (value) {
         emit(SuccessUserData(userModel));
         Map u = value.value;
         userModel = UserData(
-            id: u["id"],
-            name: u["name"],
-            email: u["email"],
-            phone: u["phone"],
-            password: u["password"]);
+          id: u["id"],
+          name: u["name"],
+          email: u["email"],
+          phone: u["phone"],
+          password: u["password"],
+          credit: u["credit"],
+          points: u["points"],
+        );
       },
     ).catchError((error) {
       print('getUserData -- ${error.toString()}');
@@ -175,31 +177,31 @@ class ShopCubit extends Cubit<ShopState> {
     });
   }
 
-  // start update user data
-  void updateUserData({
-    required String name,
-    required String email,
-    required String phone,
-  }) async{
-    emit(LoadingUpdateUserData());
-    // final DatabaseReference db = FirebaseDatabase.instance.reference();
-    // User? user = FirebaseAuth.instance.currentUser;
+// start update user data
+void updateUserData({
+  required String name,
+  required String email,
+  required String phone,
+}) async{
+  emit(LoadingUpdateUserData());
+  // final DatabaseReference db = FirebaseDatabase.instance.reference();
+  // User? user = FirebaseAuth.instance.currentUser;
 
-    // await db.child(user.uid).set({})
-    DioHelper.putData(
-      path: ApiDataAndEndPoints.updateProfilePathUrl,
-      token: token,
-      data: {
-        'name': name,
-        'email': email,
-        'phone': phone,
-      },
-    ).then((value) {
-      // userModel = LoginModel.fromJson(value.data);
-      emit(SuccessUpdateUserData(userModel!));
-    }).catchError((error) {
-      print('updateUserData -- ${error.toString()}');
-      emit(ErrorUpdateUserData(error.toString()));
-    });
-  }
+  // await db.child(user.uid).set({})
+  DioHelper.putData(
+    path: ApiDataAndEndPoints.updateProfilePathUrl,
+    token: token,
+    data: {
+      'name': name,
+      'email': email,
+      'phone': phone,
+    },
+  ).then((value) {
+    // userModel = LoginModel.fromJson(value.data);
+    emit(SuccessUpdateUserData(userModel!));
+  }).catchError((error) {
+    print('updateUserData -- ${error.toString()}');
+    emit(ErrorUpdateUserData(error.toString()));
+  });
+}
 }

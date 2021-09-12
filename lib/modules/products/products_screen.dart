@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_conditional_rendering/flutter_conditional_rendering.dart';
+import 'package:shop_app/modules/item_details/item_details_screen.dart';
 import '../../layout/cubit/shop_cubit.dart';
 import '../../models/categories_model.dart';
 import '../../models/home_model.dart';
@@ -53,6 +54,7 @@ class ProductsScreen extends StatelessWidget {
     HomeModel? model,
     CategoriesModel? categoriesModel,
   ) {
+    var size = MediaQuery.of(context).size;
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Column(
@@ -171,93 +173,102 @@ class ProductsScreen extends StatelessWidget {
   Container _buildGridProduct(ProductModel model, context) {
     return Container(
       color: MyMainColors.myWhite,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: InkWell(
+        onTap: () {
+          print("tap ");
 
-        children: [
-          Stack(
-            alignment: AlignmentDirectional.bottomStart,
-            children: [
-              Image(
-                image: NetworkImage(model.image),
-                width: double.infinity,
-                height: 200,
-              ),
-              if (model.discount != 0)
-                Container(
-                  color: MyMainColors.myRed,
-                  padding: EdgeInsets.symmetric(horizontal: 5),
-                  child: Text(
-                    'Discount ${_calculateDiscount(model)}%',
-                    style: TextStyle(
-                      fontSize: 8,
-                      color: MyMainColors.myWhite,
+          var goto = MaterialPageRoute(
+            builder: (context) => ItemDetailsScreen(model: model),
+          );
+          Navigator.push(context, goto);
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              alignment: AlignmentDirectional.bottomStart,
+              children: [
+                Image(
+                  image: NetworkImage(model.image),
+                  width: double.infinity,
+                  height: 200,
+                ),
+                if (model.discount != 0)
+                  Container(
+                    color: MyMainColors.myRed,
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    child: Text(
+                      'Discount ${_calculateDiscount(model)}%',
+                      style: TextStyle(
+                        fontSize: 8,
+                        color: MyMainColors.myWhite,
+                      ),
                     ),
                   ),
-                ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  model.name,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 14, height: 1.3),
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '${model.price.round()}',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 14,
-                        height: 1.3,
-                        color: MyMainColors.myBlue,
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    if (model.discount != 0)
-                      Text(
-                        '${model.oldPrice.round()}',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 10,
-                          height: 1.3,
-                          color: MyMainColors.myGrey,
-                          decoration: TextDecoration.lineThrough,
-                        ),
-                      ),
-                    Spacer(),
-                    IconButton(
-                      onPressed: () {
-                        ShopCubit.get(context).changeFavorites(model.id);
-                      },
-                      icon: CircleAvatar(
-                        radius: 15.0,
-                        backgroundColor:
-                            ShopCubit.get(context).favorites[model.id]!
-                                ? MyMainColors.myBlue
-                                : MyMainColors.myGrey,
-                        child: Icon(
-                          Icons.favorite_border,
-                          size: 14.0,
-                          color: MyMainColors.myWhite,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    model.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 14, height: 1.3),
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${model.price.round()}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 12,
+                          height: 1.3,
+                          color: MyMainColors.myBlue,
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      if (model.discount != 0)
+                        Text(
+                          '${model.oldPrice.round()}',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 10,
+                            height: 1.3,
+                            color: MyMainColors.myGrey,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                      Spacer(),
+                      IconButton(
+                        onPressed: () {
+                          ShopCubit.get(context).changeFavorites(model.id);
+                        },
+                        icon: CircleAvatar(
+                          radius: 14.0,
+                          backgroundColor:
+                              ShopCubit.get(context).favorites[model.id]!
+                                  ? MyMainColors.myBlue
+                                  : MyMainColors.myGrey,
+                          child: Icon(
+                            Icons.favorite_border,
+                            size: 13.0,
+                            color: MyMainColors.myWhite,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

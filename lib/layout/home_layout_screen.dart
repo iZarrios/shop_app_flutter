@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/models/login_model.dart';
+import 'package:shop_app/modules/cart/shop_cart_screen.dart';
 import 'package:shop_app/shared/components/constants.dart';
 import '../app_router.dart';
 import 'cubit/shop_cubit.dart';
@@ -20,10 +21,10 @@ class HomeLayoutScreen extends StatelessWidget {
             child: Icon(Icons.shopping_cart),
             onPressed: (){
               print("press me shop");
-              // var goto = MaterialPageRoute(
-              //   builder: (context) => ItemDetailsScreen(model: model),
-              // );
-              // Navigator.push(context, goto);
+              var goto = MaterialPageRoute(
+                builder: (context) => CartScreen(),
+              );
+              Navigator.push(context, goto);
             },
           ),
           appBar: AppBar(

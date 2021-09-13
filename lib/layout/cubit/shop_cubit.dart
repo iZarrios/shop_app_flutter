@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:shop_app/shared/components/components.dart';
 import 'package:shop_app/shared/components/constants.dart';
 import '../../models/categories_model.dart';
 import '../../models/change_favorites_model.dart';
@@ -178,30 +179,50 @@ class ShopCubit extends Cubit<ShopState> {
   }
 
 // start update user data
-void updateUserData({
-  required String name,
-  required String email,
-  required String phone,
-}) async{
-  emit(LoadingUpdateUserData());
-  // final DatabaseReference db = FirebaseDatabase.instance.reference();
-  // User? user = FirebaseAuth.instance.currentUser;
-
-  // await db.child(user.uid).set({})
-  DioHelper.putData(
-    path: ApiDataAndEndPoints.updateProfilePathUrl,
-    token: token,
-    data: {
-      'name': name,
-      'email': email,
-      'phone': phone,
-    },
-  ).then((value) {
-    // userModel = LoginModel.fromJson(value.data);
-    emit(SuccessUpdateUserData(userModel!));
-  }).catchError((error) {
-    print('updateUserData -- ${error.toString()}');
-    emit(ErrorUpdateUserData(error.toString()));
-  });
+  void updateUserData({
+    required String name,
+    required String email,
+    required String phone,
+  }) async {
+    emit(LoadingUpdateUserData());
+    final DatabaseReference db = FirebaseDatabase.instance.reference();
+    User? user = FirebaseAuth.instance.currentUser;
+    UserData newData = UserData(
+        id: user!.uid,
+        name: name,
+        email: userModel!.email,
+        phone: phone,
+        password: userModel!.password);
+    userModel!.name = name;
+    userModel!.phone = phone;
+    await db.child(user.uid).set(newData.toMap()).then(
+      (value) {
+        print("Updated");
+        showToast(text: "Successfully Updated", state: ToastStates.SUCCESS);
+        emit(SuccessUpdateUserData(newData));
+        // getUserData(context);
+      },
+    ).catchError((e) {
+      print(e.toString());
+      showToast(
+          text: "Failure in Updating, Try Again Later!",
+          state: ToastStates.ERROR);
+      emit(ErrorUpdateUserData(e.toString()));
+    });
+  }
 }
-}
+// DioHelper.putData(
+//   path: ApiDataAndEndPoints.updateProfilePathUrl,
+//   token: token,
+//   data: {
+//     'name': name,
+//     'email': email,
+//     'phone': phone,
+//   },
+// ).then((value) {
+//   // userModel = LoginModel.fromJson(value.data);
+//   emit(SuccessUpdateUserData(userModel!));
+// }).catchError((error) {
+//   print('updateUserData -- ${error.toString()}');
+//   emit(ErrorUpdateUserData(error.toString()));
+// });

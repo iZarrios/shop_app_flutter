@@ -17,13 +17,14 @@ TextFormField defaultFormField({
   IconData? suffix,
   Function? suffixPressed,
   bool isClickable = true,
+  bool isReadOnly = false,
 }) {
   return TextFormField(
+    readOnly: isReadOnly,
     controller: controller,
     keyboardType: type,
     obscureText: isPassword,
     enabled: isClickable,
-
     onFieldSubmitted: onSubmit as void Function(String)?,
     onChanged: onChange as void Function(String)?,
     onTap: onTap as void Function()?,

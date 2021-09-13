@@ -175,8 +175,6 @@ class ProductsScreen extends StatelessWidget {
       color: MyMainColors.myWhite,
       child: InkWell(
         onTap: () {
-          print("tap ");
-
           var goto = MaterialPageRoute(
             builder: (context) => ItemDetailsScreen(model: model),
           );

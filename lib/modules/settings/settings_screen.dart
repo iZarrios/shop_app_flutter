@@ -62,6 +62,7 @@ class SettingsScreen extends StatelessWidget {
               const SizedBox(height: 20.0),
               defaultFormField(
                 controller: _emailController,
+                isReadOnly: true,
                 type: TextInputType.emailAddress,
                 validate: (String? val) {
                   if (val!.isEmpty) return 'email must not be empty';
@@ -82,20 +83,17 @@ class SettingsScreen extends StatelessWidget {
               const SizedBox(height: 20.0),
               defaultButton(
                 onPressedFunction: () {
-                  showToast(text: "NOT IMPLEMENTED YET!", state: ToastStates.WARNING);
-                    FocusScope.of(context).unfocus();
-
+                  FocusScope.of(context).unfocus();
                   // // // check no empty value
-                  // if (_formKey.currentState!.validate()) {
-                  //   // to close keyboard if open
-                  //   FocusScope.of(context).unfocus();
-                  //
-                  //   ShopCubit.get(context).updateUserData(
-                  //     name: _nameController.text,
-                  //     email: _emailController.text,
-                  //     phone: _phoneController.text,
-                  //   );
-                  // }
+                  if (_formKey.currentState!.validate()) {
+                    //to close keyboard if open
+                    FocusScope.of(context).unfocus();
+                    ShopCubit.get(context).updateUserData(
+                      name: _nameController.text,
+                      email: _emailController.text,
+                      phone: _phoneController.text,
+                    );
+                  }
                 },
                 text: 'update',
               ),

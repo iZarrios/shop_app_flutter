@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_conditional_rendering/flutter_conditional_rendering.dart';
 // import 'package:shop_app/modules/cart/cubit/cart_cubit.dart';
@@ -19,22 +21,28 @@ class CartScreen extends StatelessWidget {
         conditionBuilder: (context) => _conditionBuilder(),
         fallbackBuilder: (context) => _buildFallBack(),
         widgetBuilder: (context) => ListView.separated(
-            itemBuilder: (context, index) => _buildItem(),
+            physics: BouncingScrollPhysics(),
+            itemBuilder: (context, index) => _buildItem(
+                  image: Image.asset("assets/images/onboard_1.jpg"),
+                  title: 'Test',
+                ),
             separatorBuilder: (context, index) => SizedBox(height: 5),
             itemCount: 10),
       ),
     );
   }
 
-  Widget _buildItem() => SingleChildScrollView(
+  Widget _buildItem({required String title, required Image image}) =>
+      SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Row(
           children: [
             Container(
-                height: 100,
-                width: 100,
-                child: Image.asset("assets/images/onboard_1.jpg")),
-            Text("test"),
+              height: 100,
+              width: 100,
+              child: Image.asset("assets/images/onboard_1.jpg"),
+            ),
+            Text(title),
           ],
         ),
       );

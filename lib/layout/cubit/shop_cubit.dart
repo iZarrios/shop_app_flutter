@@ -151,14 +151,13 @@ class ShopCubit extends Cubit<ShopState> {
 
   // User
 //TODO:: get data from here
-  void getUserData(BuildContext context) {
+  Future<void> getUserData(BuildContext context) async {
     emit(LoadingUserData());
 
     final DatabaseReference db = FirebaseDatabase.instance.reference();
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) signOut(context);
-    print(user!.uid);
-    db.child(user.uid).once().then(
+    await db.child("users").child(user!.uid).once().then(
       (value) {
         emit(SuccessUserData(userModel));
         Map u = value.value;
@@ -170,6 +169,7 @@ class ShopCubit extends Cubit<ShopState> {
           password: u["password"],
           credit: u["credit"],
           points: u["points"],
+          items: u["items"] ?? [],
         );
       },
     ).catchError((error) {
@@ -188,14 +188,16 @@ class ShopCubit extends Cubit<ShopState> {
     final DatabaseReference db = FirebaseDatabase.instance.reference();
     User? user = FirebaseAuth.instance.currentUser;
     UserData newData = UserData(
-        id: user!.uid,
-        name: name,
-        email: userModel!.email,
-        phone: phone,
-        password: userModel!.password);
+      id: user!.uid,
+      name: name,
+      email: userModel!.email,
+      phone: phone,
+      password: userModel!.password,
+      items: userModel!.items,
+    );
     userModel!.name = name;
     userModel!.phone = phone;
-    await db.child(user.uid).set(newData.toMap()).then(
+    await db.child("users").child(user.uid).set(newData.toMap()).then(
       (value) {
         print("Updated");
         showToast(text: "Successfully Updated", state: ToastStates.SUCCESS);

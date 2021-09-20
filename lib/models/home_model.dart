@@ -42,6 +42,18 @@ class ProductModel {
   late bool inFavorites;
   late bool inCart;
 
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "price": price,
+      "oldPrice": oldPrice,
+      "discount": discount,
+      "image": image,
+      "name": name,
+      "inFavorites": inFavorites,
+      "inCart": inCart,
+    };
+  }
   ProductModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     price = json['price'];

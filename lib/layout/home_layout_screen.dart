@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -19,12 +18,33 @@ class HomeLayoutScreen extends StatelessWidget {
         return Scaffold(
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.shopping_cart),
-            onPressed: (){
-              print("press me shop");
-              var goto = MaterialPageRoute(
-                builder: (context) => CartScreen(),
+            onPressed: () async {
+              print("p");
+              signOut(context);
+              var x = UserData(
+                phone: "phone",
+                items: {
+                  0: {"tesdasdasdt": "tesat"},
+                  1: {"tesdasdasdt": "tesat"},
+                  2: {"tesdasdasdt": "tesat"},
+                },
+                email: "btt8yr 3ady",
+                name: "naame",
+                password: "pass",
+                id: "4",
               );
-              Navigator.push(context, goto);
+              x.items[0] = {"gg":"kek"};
+
+              final DatabaseReference db =
+                  FirebaseDatabase.instance.reference();
+              await db.child("users").child("he5a").set(x.toMap());
+              print(x.toMap());
+              // ShopCubit.get(context).getUserData(context);
+              // print("press me shop");
+              // var goto = MaterialPageRoute(
+              //   builder: (context) => CartScreen(),
+              // );
+              // Navigator.push(context, goto);
             },
           ),
           appBar: AppBar(

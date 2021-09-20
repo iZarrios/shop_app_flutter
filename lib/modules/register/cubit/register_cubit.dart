@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:shop_app/layout/cubit/shop_cubit.dart';
+import 'package:shop_app/models/home_model.dart';
+import 'package:shop_app/shared/components/components.dart';
 import '../../../models/login_model.dart';
 
 part 'register_state.dart';
@@ -36,15 +39,19 @@ class RegisterCubit extends Cubit<RegisterState> {
         email: email,
         phone: phone,
         password: password,
+        items: {
+          0: {"Empty": "test"}
+        },
         points: 0,
         credit: 0,
       );
       print(_user);
       await db
+          .child("users")
           .child("${userCredential.user!.uid}")
           .set(_user.toMap())
           .then((value) => print("Done cloud register"))
-          .catchError((e) async {
+          .catchError((e) {
         print("Error cloud register $e");
       });
       emit(RegisterSucess());
@@ -52,7 +59,9 @@ class RegisterCubit extends Cubit<RegisterState> {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        showToast(
+            text: 'The account already exists for that email.',
+            state: ToastStates.ERROR);
       }
     } catch (errorMessage) {
       print(errorMessage.toString());

@@ -17,7 +17,6 @@ void main() async {
   // to ensure running all async await functions before runApp
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
   ErrorWidget.builder = (FlutterErrorDetails details) {
     return Scaffold(
       body: Center(
@@ -25,7 +24,6 @@ void main() async {
       ),
     );
   };
-
   Bloc.observer = MyBlocObserver();
 
   DioHelper.init();
@@ -57,7 +55,7 @@ class ShopApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         _appThemeMode(),
-        _shopCubit(),
+        _shopCubit(context),
       ],
       child: BlocConsumer<AppThemeMode, AppState>(
         listener: _listener,
@@ -68,19 +66,21 @@ class ShopApp extends StatelessWidget {
 
   BlocProvider<AppThemeMode> _appThemeMode() {
     return BlocProvider(
-      create: (_) => AppThemeMode()
+      create: (_) =>
+      AppThemeMode()
         ..saveAppModeInFirstLaunch(isDarkFromShared: isDarkFromShared),
     );
   }
 
-  BlocProvider<ShopCubit> _shopCubit() {
+  BlocProvider<ShopCubit> _shopCubit(BuildContext context) {
     return BlocProvider(
       // get data where you provide the cubit
-      create: (_) => ShopCubit(),
-      // ..getHomeData()
-      // ..getCategoriesData()
-      // ..getFavoritesData()
-      // ..getUserData(),
+      create: (_) =>
+      ShopCubit()
+        ..getHomeData()
+        ..getCategoriesData()
+        ..getFavoritesData()
+        ..getUserData(context),
     );
   }
 
@@ -99,6 +99,8 @@ class ShopApp extends StatelessWidget {
   }
 
   ThemeMode _themeMode(context) {
-    return AppThemeMode.get(context).isDark ? ThemeMode.dark : ThemeMode.light;
+    return AppThemeMode
+        .get(context)
+        .isDark ? ThemeMode.dark : ThemeMode.light;
   }
 }

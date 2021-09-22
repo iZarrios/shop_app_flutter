@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:shop_app/layout/cubit/shop_cubit.dart';
 import 'package:shop_app/models/home_model.dart';
+import 'package:shop_app/models/login_model.dart';
 import 'package:shop_app/shared/components/components.dart';
 import 'package:shop_app/shared/styles/my_main_styles.dart';
 
@@ -24,15 +28,11 @@ class ItemDetailsScreen extends StatelessWidget {
               children: [
                 Center(
                   child: Container(
-                    height: 300,
-                    width: 250,
-                    child: Row(
-                      children: [
-                        Image.network(
-                          model.image,
-                          fit: BoxFit.fill,
-                        ),
-                      ],
+                    child: Image.network(
+                      model.image,
+                      width: 300,
+                      height: 300,
+                      fit: BoxFit.fill,
                     ),
                   ),
                 ),
@@ -84,17 +84,33 @@ class ItemDetailsScreen extends StatelessWidget {
                   children: [
                     _buildText("Total :"),
                     Spacer(),
-                    _buildText(model.price * 0.14 + model.price),
+                    _buildText((model.price * 0.14 + model.price).round()),
                   ],
                 ),
                 SizedBox(height: 20),
                 defaultButton(
-                    onPressedFunction: () {
-                      showToast(
-                          text: "Successfully Added",
-                          state: ToastStates.SUCCESS);
-                    },
-                    text: "Add to cart")
+                  onPressedFunction: () async {
+                    final DatabaseReference db =
+                        FirebaseDatabase.instance.reference();
+                    User? user = FirebaseAuth.instance.currentUser;
+                    UserData? userModel = ShopCubit.get(context).userModel;
+                    // await db //getting data
+                    //     .child("cart")
+                    //     .child(user!.uid)
+                    //     .once()
+                    //     .then((value) {
+                    //   data = value;
+                    // }).catchError((e) {});
+                    await db
+                        .child("carts")
+                        .child(user!.uid)
+                        .child(model.id.toString())
+                        .set(model.toMap());
+                    showToast(
+                        text: "Successfully Added", state: ToastStates.SUCCESS);
+                  },
+                  text: "Add to Cart",
+                )
               ],
             ),
           ),

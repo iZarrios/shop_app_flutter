@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +18,18 @@ class HomeLayoutScreen extends StatelessWidget {
         return Scaffold(
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.shopping_cart),
-            onPressed: (){
-              print("press me shop");
+            onPressed: () async {
+              User? user = FirebaseAuth.instance.currentUser;
+              DatabaseReference db = FirebaseDatabase.instance.reference();
+              late Map data;
+              await db.child("carts").child(user!.uid).once().then((value) {
+                data = value.value;
+              }).catchError((error) {
+                print("Error FAB $error");
+              });
+              print(data.length);
               var goto = MaterialPageRoute(
-                builder: (context) => CartScreen(),
+                builder: (context) => CartScreen(data),
               );
               Navigator.push(context, goto);
             },

@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:shop_app/layout/cubit/shop_cubit.dart';
+import 'package:shop_app/models/home_model.dart';
+import 'package:shop_app/shared/components/components.dart';
 import '../../../models/login_model.dart';
 
 part 'register_state.dart';
@@ -39,20 +42,43 @@ class RegisterCubit extends Cubit<RegisterState> {
         points: 0,
         credit: 0,
       );
-      print(_user);
       await db
+          .child("users")
           .child("${userCredential.user!.uid}")
           .set(_user.toMap())
           .then((value) => print("Done cloud register"))
-          .catchError((e) async {
-        print("Error cloud register $e");
+          .catchError((e) {
+        print("Error cloud register ${e.toString()}");
       });
+      // ProductModel x = ProductModel(
+      //   id: 100,
+      //   price: "price",
+      //   oldPrice: "oldPrice",
+      //   discount: " discount",
+      //   image: " image",
+      //   name: "name",
+      //   inFavorites: false,
+      //   inCart: false,
+      // );
+      // Map _newUserCart = {
+      //   "${x.id}": x.toMap(),
+      // };
+      // await db
+      //     .child("carts")
+      //     .child("${userCredential.user!.uid}")
+      //     .set(_newUserCart)
+      //     .then((value) => print("Done New Cart Upload"))
+      //     .catchError((e) {
+      //   print("Error New Cart Upload $e");
+      // });
       emit(RegisterSucess());
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        showToast(
+            text: 'The account already exists for that email.',
+            state: ToastStates.ERROR);
       }
     } catch (errorMessage) {
       print(errorMessage.toString());

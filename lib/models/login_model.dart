@@ -4,13 +4,12 @@ class LoginModel {
   late bool status;
   late dynamic message;
   UserData? data;
-
-  LoginModel.fromJson(Map<String, dynamic> json) {
-    data = json['data'] != null ? UserData.fromJson(json['data']) : null;
-    // status = json['status'];
-    // message = json['message'];
-  }
 }
+// LoginModel.fromJson(Map<String, dynamic> json) {
+//   data = json['data'] != null ? UserData.fromJson(json['data']) : null;
+//   // status = json['status'];
+//   // message = json['message'];
+// }
 
 class UserData {
   late String id;
@@ -35,25 +34,27 @@ class UserData {
   });
 
   Map<String, dynamic> toMap() {
-    return {
+    Map<String, dynamic> x = {
       "name": name,
       "id": id,
       "email": email,
       "phone": phone,
       "password": password,
-      "points":points,
-      "credit":credit,
+      "points": points,
+      "credit": credit,
     };
-  }
-
-  UserData.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    email = json['email'];
-    phone = json['phone'];
-    points = json['points'];
-    credit = json['credit'];
-    // image = json['image'];
-    // token = json['token'];
+    print("toMap Result\n $x");
+    return x;
   }
 }
+
+// UserData.fromJson(Map<String, dynamic> json) {
+//   id = json['id'];
+//   name = json['name'];
+//   email = json['email'];
+//   phone = json['phone'];
+//   points = json['points'];
+//   credit = json['credit'];
+//   // image = json['image'];
+//   // token = json['token'];
+// }

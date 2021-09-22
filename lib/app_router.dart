@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_app/modules/item_details/item_details_screen.dart';
 import 'layout/cubit/shop_cubit.dart';
 import 'layout/home_layout_screen.dart';
-import 'models/home_model.dart';
 import 'modules/login/login_screen.dart';
 import 'modules/on_boarding/on_boarding_screen.dart';
 import 'modules/register/register_screen.dart';
@@ -38,7 +36,7 @@ class AppRouter {
     }
   }
 
-  User? user = FirebaseAuth.instance.currentUser;//>> place
+  User? user = FirebaseAuth.instance.currentUser; //>> place
 
   MaterialPageRoute<dynamic> _startScreen() {
     if (onBoarding != null) {
@@ -77,10 +75,10 @@ class AppRouter {
     return MaterialPageRoute(
       builder: (context) => BlocProvider(
         create: (context) => ShopCubit()
+          ..getUserData(context)
           ..getHomeData()
           ..getCategoriesData()
-          ..getFavoritesData()
-          ..getUserData(context),
+          ..getFavoritesData(),
         child: HomeLayoutScreen(),
       ),
     );

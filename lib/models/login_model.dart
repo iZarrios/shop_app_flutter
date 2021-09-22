@@ -19,8 +19,6 @@ class UserData {
   late String phone;
   late int points;
   late int credit;
-  late Map<int, Map> items;
-
   // late String image;
   // late String? token;
 
@@ -31,7 +29,6 @@ class UserData {
     required this.email,
     required this.phone,
     required this.password,
-    required this.items,
     this.points = 0,
     this.credit = 0,
   });
@@ -45,7 +42,6 @@ class UserData {
       "password": password,
       "points": points,
       "credit": credit,
-      "items": items,
     };
     print("toMap Result\n $x");
     return x;

@@ -94,11 +94,18 @@ class ItemDetailsScreen extends StatelessWidget {
                         FirebaseDatabase.instance.reference();
                     User? user = FirebaseAuth.instance.currentUser;
                     UserData? userModel = ShopCubit.get(context).userModel;
-                    userModel!.items[model.id] = model.toMap();
+                    // await db //getting data
+                    //     .child("cart")
+                    //     .child(user!.uid)
+                    //     .once()
+                    //     .then((value) {
+                    //   data = value;
+                    // }).catchError((e) {});
                     await db
-                        .child("users")
+                        .child("carts")
                         .child(user!.uid)
-                        .set(userModel.toMap());
+                        .child(model.id.toString())
+                        .set(model.toMap());
                     showToast(
                         text: "Successfully Added", state: ToastStates.SUCCESS);
                   },

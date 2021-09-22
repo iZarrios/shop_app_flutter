@@ -39,21 +39,38 @@ class RegisterCubit extends Cubit<RegisterState> {
         email: email,
         phone: phone,
         password: password,
-        items: {
-          0: {"Empty": "test"}
-        },
         points: 0,
         credit: 0,
       );
-      print(_user);
       await db
           .child("users")
           .child("${userCredential.user!.uid}")
           .set(_user.toMap())
           .then((value) => print("Done cloud register"))
           .catchError((e) {
-        print("Error cloud register $e");
+        print("Error cloud register ${e.toString()}");
       });
+      // ProductModel x = ProductModel(
+      //   id: 100,
+      //   price: "price",
+      //   oldPrice: "oldPrice",
+      //   discount: " discount",
+      //   image: " image",
+      //   name: "name",
+      //   inFavorites: false,
+      //   inCart: false,
+      // );
+      // Map _newUserCart = {
+      //   "${x.id}": x.toMap(),
+      // };
+      // await db
+      //     .child("carts")
+      //     .child("${userCredential.user!.uid}")
+      //     .set(_newUserCart)
+      //     .then((value) => print("Done New Cart Upload"))
+      //     .catchError((e) {
+      //   print("Error New Cart Upload $e");
+      // });
       emit(RegisterSucess());
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {

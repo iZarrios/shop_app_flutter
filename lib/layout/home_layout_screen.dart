@@ -19,32 +19,19 @@ class HomeLayoutScreen extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.shopping_cart),
             onPressed: () async {
-              print("p");
-              signOut(context);
-              var x = UserData(
-                phone: "phone",
-                items: {
-                  0: {"tesdasdasdt": "tesat"},
-                  1: {"tesdasdasdt": "tesat"},
-                  2: {"tesdasdasdt": "tesat"},
-                },
-                email: "btt8yr 3ady",
-                name: "naame",
-                password: "pass",
-                id: "4",
+              User? user = FirebaseAuth.instance.currentUser;
+              DatabaseReference db = FirebaseDatabase.instance.reference();
+              late Map data;
+              await db.child("carts").child(user!.uid).once().then((value) {
+                data = value.value;
+              }).catchError((error) {
+                print("Error FAB $error");
+              });
+              print(data.length);
+              var goto = MaterialPageRoute(
+                builder: (context) => CartScreen(data),
               );
-              x.items[0] = {"gg":"kek"};
-
-              final DatabaseReference db =
-                  FirebaseDatabase.instance.reference();
-              await db.child("users").child("he5a").set(x.toMap());
-              print(x.toMap());
-              // ShopCubit.get(context).getUserData(context);
-              // print("press me shop");
-              // var goto = MaterialPageRoute(
-              //   builder: (context) => CartScreen(),
-              // );
-              // Navigator.push(context, goto);
+              Navigator.push(context, goto);
             },
           ),
           appBar: AppBar(

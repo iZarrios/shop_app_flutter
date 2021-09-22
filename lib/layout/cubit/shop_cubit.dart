@@ -169,7 +169,6 @@ class ShopCubit extends Cubit<ShopState> {
           password: u["password"],
           credit: u["credit"],
           points: u["points"],
-          items: u["items"] ?? [],
         );
       },
     ).catchError((error) {
@@ -193,7 +192,6 @@ class ShopCubit extends Cubit<ShopState> {
       email: userModel!.email,
       phone: phone,
       password: userModel!.password,
-      items: userModel!.items,
     );
     userModel!.name = name;
     userModel!.phone = phone;

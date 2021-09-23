@@ -1,4 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_conditional_rendering/flutter_conditional_rendering.dart';
@@ -249,13 +251,32 @@ class ProductsScreen extends StatelessWidget {
                         },
                         icon: CircleAvatar(
                           radius: 14.0,
-                          backgroundColor:
-                              ShopCubit.get(context).favorites[model.id]!
-                                  ? MyMainColors.myBlue
-                                  : MyMainColors.myGrey,
-                          child: Icon(
-                            Icons.favorite_border,
-                            size: 13.0,
+                          // ShopCubit.get(context).favorites[model.id]!
+                          backgroundColor: model.inFavorites == true
+                              ? MyMainColors.myBlue
+                              : MyMainColors.myGrey,
+                          child: IconButton(
+                            onPressed: () async {
+                              final DatabaseReference db =
+                                  FirebaseDatabase.instance.reference();
+                              User? user = FirebaseAuth.instance.currentUser;
+                              model.inFavorites = !model.inFavorites;
+                              await db
+                                  .child("favourites")
+                                  .child(user!.uid)
+                                  .child(model.id.toString())
+                                  .set(model.toMap())
+                                  .then((value) => showToast(
+                                      text: "Added to favourites",
+                                      state: ToastStates.SUCCESS))
+                                  .catchError((e) {
+                                print("Failed Favourite $e");
+                              });
+                            },
+                            icon: Icon(
+                              Icons.favorite_border,
+                              size: 13,
+                            ),
                             color: MyMainColors.myWhite,
                           ),
                         ),

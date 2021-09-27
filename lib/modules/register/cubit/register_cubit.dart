@@ -39,6 +39,7 @@ class RegisterCubit extends Cubit<RegisterState> {
         email: email,
         phone: phone,
         password: password,
+        favourites: null,
         points: 0,
         credit: 0,
       );

@@ -55,7 +55,7 @@ class ProductModel {
     };
   }
 
-  ProductModel.fromJson(Map<String, dynamic> json) {
+  ProductModel.fromJson(Map<dynamic, dynamic> json) {
     id = json['id'];
     price = json['price'];
     oldPrice = json['old_price'];

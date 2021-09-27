@@ -247,7 +247,7 @@ class ProductsScreen extends StatelessWidget {
                       Spacer(),
                       IconButton(
                         onPressed: () {
-                          ShopCubit.get(context).changeFavorites(model.id);
+                          // ShopCubit.get(context).changeFavorites(model.id);
                         },
                         icon: CircleAvatar(
                           radius: 14.0,
@@ -262,14 +262,16 @@ class ProductsScreen extends StatelessWidget {
                               User? user = FirebaseAuth.instance.currentUser;
                               model.inFavorites = !model.inFavorites;
                               await db
-                                  .child("favourites")
+                                  .child("users")
                                   .child(user!.uid)
+                                  .child("favourites")
                                   .child(model.id.toString())
                                   .set(model.toMap())
-                                  .then((value) => showToast(
-                                      text: "Added to favourites",
-                                      state: ToastStates.SUCCESS))
-                                  .catchError((e) {
+                                  .then((value) {
+                                return showToast(
+                                    text: "Added to favourites",
+                                    state: ToastStates.SUCCESS);
+                              }).catchError((e) {
                                 print("Failed Favourite $e");
                               });
                             },

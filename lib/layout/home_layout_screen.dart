@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/models/login_model.dart';
 import 'package:shop_app/modules/cart/shop_cart_screen.dart';
+import 'package:shop_app/shared/components/components.dart';
 import 'package:shop_app/shared/components/constants.dart';
 import '../app_router.dart';
 import 'cubit/shop_cubit.dart';
@@ -21,13 +22,12 @@ class HomeLayoutScreen extends StatelessWidget {
             onPressed: () async {
               User? user = FirebaseAuth.instance.currentUser;
               DatabaseReference db = FirebaseDatabase.instance.reference();
-              late Map data;
+              late Map? data;
               await db.child("carts").child(user!.uid).once().then((value) {
                 data = value.value;
               }).catchError((error) {
                 print("Error FAB $error");
               });
-              print(data.length);
               var goto = MaterialPageRoute(
                 builder: (context) => CartScreen(data),
               );
@@ -40,7 +40,9 @@ class HomeLayoutScreen extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () {
-                  _goToSearchScreen(context);
+                  showToast(
+                      text: "Not Implemented Yet", state: ToastStates.WARNING);
+                  // _goToSearchScreen(context);
                 },
                 icon: Icon(Icons.search),
               ),

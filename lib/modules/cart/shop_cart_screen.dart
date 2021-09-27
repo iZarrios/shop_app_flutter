@@ -9,10 +9,10 @@ import 'package:shop_app/models/home_model.dart';
 
 class CartScreen extends StatelessWidget {
   CartScreen(this.data) {
-    keys = data.keys.toList();
+    if (data != null) keys = data!.keys.toList();
   }
 
-  final Map data;
+  final Map? data;
   late final List keys;
 
   @override
@@ -32,11 +32,11 @@ class CartScreen extends StatelessWidget {
         widgetBuilder: (context) => ListView.separated(
             physics: BouncingScrollPhysics(),
             itemBuilder: (context, index) => _buildItem(
-                  image: "${data[keys[index]]["image"]}",
-                  title: "${data[keys[index]]["name"]}",
+                  image: "${data![keys[index]]["image"]}",
+                  title: "${data![keys[index]]["name"]}",
                 ),
             separatorBuilder: (context, index) => SizedBox(height: 5),
-            itemCount: data.length),
+            itemCount: data!.length),
       ),
     );
   }
@@ -50,7 +50,7 @@ class CartScreen extends StatelessWidget {
             style: TextStyle(color: Colors.black),
           ),
           Text(
-            "${data.length} Items",
+            "${data!.length} Items",
             style: TextStyle(
               color: Colors.black38,
               fontSize: 10,
@@ -83,7 +83,11 @@ class CartScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(title,overflow: TextOverflow.ellipsis,maxLines: 2,),
+                  Text(
+                    title,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
                 ],
               ),
             ),
@@ -94,7 +98,6 @@ class CartScreen extends StatelessWidget {
   Widget _buildFallBack() => Center(child: Text("No Items in your cart!"));
 
   bool _conditionBuilder() {
-    //if length more than one
-    return true;
+    return data != null && data!.length > 0;
   }
 }

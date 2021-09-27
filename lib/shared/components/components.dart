@@ -204,22 +204,23 @@ Padding buildListProduct(
                     Spacer(),
                     IconButton(
                       onPressed: () {
-                        ShopCubit.get(context).changeFavorites(model.id);
+                        // ShopCubit.get(context).changeFavorites(model.id);
                       },
-                      icon: CircleAvatar(
-                        radius: 15.0,
-                        backgroundColor: (ShopCubit.get(context)
-                                    .favorites[model.id]! &&
-                                ShopCubit.get(context).favorites[model.id] ==
-                                    true)
-                            ? MyMainColors.myBlue
-                            : MyMainColors.myGrey,
-                        child: Icon(
-                          Icons.favorite_border,
-                          size: 14.0,
-                          color: MyMainColors.myWhite,
-                        ),
-                      ),
+                      icon: Icon(Icons.add),
+                      // icon: CircleAvatar(
+                      //   radius: 15.0,
+                      //   backgroundColor: (ShopCubit.get(context)
+                      //               .favorites[model.id]! &&
+                      //           ShopCubit.get(context).favorites[model.id] ==
+                      //               true)
+                      //       ? MyMainColors.myBlue
+                      //       : MyMainColors.myGrey,
+                      //   child: Icon(
+                      //     Icons.favorite_border,
+                      //     size: 14.0,
+                      //     color: MyMainColors.myWhite,
+                      //   ),
+                      // ),
                     ),
                   ],
                 ),

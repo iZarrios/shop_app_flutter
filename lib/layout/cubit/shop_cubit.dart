@@ -59,7 +59,7 @@ class ShopCubit extends Cubit<ShopState> {
       token: token,
     ).then((value) {
       homeModel = HomeModel.fromJson(value.data);
-      _addHomeDataToFavorites();
+      // _addHomeDataToFavorites();
       emit(SuccessHomeData());
     }).catchError((error) {
       print('getHomeData -- ${error.toString()}');
@@ -68,27 +68,30 @@ class ShopCubit extends Cubit<ShopState> {
   }
 
   // start Add favorites data local
-  Map<int, bool> favorites = {};
-
-  void _addHomeDataToFavorites() {
-    homeModel!.data.products.forEach((element) {
-      favorites.addAll({
-        element.id: element.inFavorites,
-      });
-    });
-  }
+  // Map<int, bool> favorites = {};
+  //
+  // void _addHomeDataToFavorites() {
+  //   homeModel!.data.products.forEach((element) {
+  //     favorites.addAll({
+  //       element.id: element.inFavorites,
+  //     });
+  //   });
+  // }
 
   // start get favorites data
-  FavoritesModel? favoritesModel;
+  late Map favouritesMap;
 
-  void getFavoritesData() {
+  void getFavoritesData() async {
     emit(LoadingFavoritesData());
-
-    DioHelper.getData(
-      path: ApiDataAndEndPoints.favoritesPathUrl,
-      token: token,
-    ).then((value) {
-      favoritesModel = FavoritesModel.fromJson(value.data);
+    User? user = FirebaseAuth.instance.currentUser;
+    DatabaseReference db = FirebaseDatabase.instance.reference();
+    await db
+        .child("users")
+        .child(user!.uid)
+        .child("favourites")
+        .once()
+        .then((value) {
+      favouritesMap = value.value;
       emit(SuccessFavoritesData());
     }).catchError((error) {
       print("getFavoritesData -- ${error.toString()}");
@@ -96,38 +99,49 @@ class ShopCubit extends Cubit<ShopState> {
     });
   }
 
+  // DioHelper.getData(
+  //   path: ApiDataAndEndPoints.favoritesPathUrl,
+  //   token: token,
+  // ).then((value) {
+  //   favoritesModel = FavoritesModel.fromJson(value.data);
+  //
+  // }).catchError((error) {
+  //   print("getFavoritesData -- ${error.toString()}");
+  //   emit(ErrorFavoritesData(error.toString()));
+  // });
+
   // start change favorites
-  ChangeFavoritesModel? changeFavoritesModel;
-
-  void changeFavorites(int productId) async {
-    try {
-      favorites[productId] = !favorites[productId]!;
-      emit(SuccessChangeFavoritesDataLocal());
-
-      Response value = await DioHelper.postData(
-        path: ApiDataAndEndPoints.favoritesPathUrl,
-        data: {
-          'product_id': productId,
-        },
-        token: token,
-      );
-
-      changeFavoritesModel = ChangeFavoritesModel.fromJson(value.data);
-      if (!changeFavoritesModel!.status) {
-        // in case the status in remote == false
-        // redo the change color in local
-        favorites[productId] = !favorites[productId]!;
-      } else {
-        getFavoritesData();
-      }
-
-      emit(SuccessChangeFavoritesDataRemote(changeFavoritesModel!));
-    } catch (error) {
-      favorites[productId] = !favorites[productId]!;
-      print('changeFavorites -- ${error.toString()}');
-      emit(ErrorChangeFavoritesDataRemote(error.toString()));
-    }
-  }
+  // ChangeFavoritesModel? changeFavoritesModel;
+  //
+  // void changeFavorites(int productId) async {
+  //   try {
+  //     favorites[productId] = !favorites[productId]!;
+  //     emit(SuccessChangeFavoritesDataLocal());
+  //
+  //     Response value = await DioHelper.postData(
+  //       path: ApiDataAndEndPoints.favoritesPathUrl,
+  //       data: {
+  //         'product_id': productId,
+  //       },
+  //       token: token,
+  //     );
+  //
+  //     changeFavoritesModel = ChangeFavoritesModel.fromJson(value.data);
+  //     if (!changeFavoritesModel!.status) {
+  //       // in case the status in remote == false
+  //       // redo the change color in local
+  //       favorites[productId] = !favorites[productId]!;
+  //     } else {
+  //       getFavoritesData();
+  //     }
+  //
+  //     emit(SuccessChangeFavoritesDataRemote(changeFavoritesModel!));
+  //   } catch (error) {
+  //     favorites[productId] = !favorites[productId]!;
+  //     print('changeFavorites -- ${error.toString()}');
+  //     emit(ErrorChangeFavoritesDataRemote(error.toString()));
+  //   }
+  // }
 
   // start get categories data
   CategoriesModel? categoriesModel;
@@ -167,6 +181,7 @@ class ShopCubit extends Cubit<ShopState> {
           email: u["email"],
           phone: u["phone"],
           password: u["password"],
+          favourites: u["favourites"],
           credit: u["credit"],
           points: u["points"],
         );
@@ -192,6 +207,7 @@ class ShopCubit extends Cubit<ShopState> {
       email: userModel!.email,
       phone: phone,
       password: userModel!.password,
+      favourites: userModel!.favourites,
     );
     userModel!.name = name;
     userModel!.phone = phone;
